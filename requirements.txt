@@ -7,3 +7,4 @@ google-genai
 faiss-cpu
 sentence-transformers
 langchain-community
+torchvision

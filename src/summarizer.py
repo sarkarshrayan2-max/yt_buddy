@@ -1,4 +1,4 @@
-from src.config import client
+from src.config import groq_llm
 from src.prompts import SUMMARY_PROMPT
 from src.chunker import get_processing_mode, split_transcript
 
@@ -14,22 +14,24 @@ def summarize_video(transcript):
 
 
 def direct_summary(transcript):
-    prompt = SUMMARY_PROMPT.format(transcript=transcript)
 
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=prompt
+    prompt = SUMMARY_PROMPT.format(
+        transcript=transcript
     )
 
-    return response.text
+    response = groq_llm.invoke(prompt)
+
+    return response.content
 
 
 def chunked_summary(transcript):
+
     chunks = split_transcript(transcript)
 
     chunk_summaries = []
 
     for index, chunk in enumerate(chunks):
+
         prompt = f"""
         Summarize this part of the video transcript.
 
@@ -42,17 +44,19 @@ def chunked_summary(transcript):
         - Key points
 
         Transcript Chunk:
+
         {chunk}
         """
 
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=prompt
+        response = groq_llm.invoke(prompt)
+
+        chunk_summaries.append(
+            response.content
         )
 
-        chunk_summaries.append(response.text)
-
-    combined_summary_text = "\n\n".join(chunk_summaries)
+    combined_summary_text = "\n\n".join(
+        chunk_summaries
+    )
 
     final_prompt = f"""
     You are an expert video summarizer.
@@ -72,9 +76,8 @@ def chunked_summary(transcript):
     {combined_summary_text}
     """
 
-    final_response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=final_prompt
+    final_response = groq_llm.invoke(
+        final_prompt
     )
 
-    return final_response.text
+    return final_response.content
