@@ -4,3 +4,6 @@ langchain
 langchain-groq 
 python-dotenv
 google-genai
+faiss-cpu
+sentence-transformers
+langchain-community
