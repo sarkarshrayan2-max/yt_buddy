@@ -3,7 +3,7 @@ import streamlit as st
 from src.transcript import get_transcript
 from src.summarizer import summarize_video
 from src.rag import create_vector_store, answer_question
-
+from src.pdf_generator import generate_pdf
 
 st.set_page_config(
     page_title="YT Buddy",
@@ -175,3 +175,22 @@ if st.session_state.summary:
 
             with st.chat_message("assistant"):
                 st.markdown(chat["answer"])
+    st.divider()
+    #-----------PDF GENERATION----------------
+    st.write("## 📄 Export PDF")
+
+    if st.button("Generate PDF", use_container_width=True):
+        pdf_path = generate_pdf(
+            video_url=st.session_state.current_url,
+            summary=st.session_state.summary,
+            chat_history=st.session_state.chat_history
+        )
+
+        with open(pdf_path, "rb") as pdf_file:
+            st.download_button(
+                label="Download PDF Summary",
+                data=pdf_file,
+                file_name="yt_buddy_summary.pdf",
+                mime="application/pdf",
+                use_container_width=True
+            )
