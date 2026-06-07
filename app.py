@@ -4,6 +4,8 @@ from src.transcript import get_transcript
 from src.summarizer import summarize_video
 from src.rag import create_vector_store, answer_question
 from src.pdf_generator import generate_pdf
+from src.video_metadata import get_video_metadata, format_duration
+from src.translator import translate_text
 
 st.set_page_config(
     page_title="YT Buddy",
@@ -36,11 +38,18 @@ if "chat_history" not in st.session_state:
 if "current_url" not in st.session_state:
     st.session_state.current_url = None
 
+if "metadata" not in st.session_state:
+    st.session_state.metadata = None
 
+if "translated_summary" not in st.session_state:
+    st.session_state.translated_summary = None
 # ---------------- INPUT SECTION ----------------
 
 url = st.text_input("Enter YouTube URL")
-
+language = st.selectbox(
+    "Select Output Language",
+    ["English", "Hindi", "Bengali", "French", "Spanish"]
+)
 col_a, col_b = st.columns([1, 1])
 
 with col_a:
@@ -57,6 +66,8 @@ if clear_btn:
     st.session_state.video_data = None
     st.session_state.chat_history = []
     st.session_state.current_url = None
+    st.session_state.metadata = None
+    st.session_state.translated_summary = None
     st.rerun()
 
 
@@ -70,17 +81,28 @@ if generate_btn:
         try:
             with st.spinner("Extracting transcript, summarizing video, and building RAG index..."):
                 video_data = get_transcript(url)
-
+                try:
+                    metadata = get_video_metadata(url)
+                except Exception:
+                    metadata = {
+                        "title": "Metadata unavailable",
+                        "author": "Metadata unavailable",
+                        "duration": "Metadata unavailable",
+                        "thumbnail_url": None,
+                        "publish_date": "Metadata unavailable"
+                    }
                 summary, processing_info = summarize_video(
                     video_data["transcript"]
                 )
-
+                translated_summary = translate_text(summary, language)
                 vector_store = create_vector_store(
                     video_data["transcript"]
                 )
 
                 st.session_state.video_data = video_data
+                st.session_state.metadata = metadata
                 st.session_state.summary = summary
+                st.session_state.translated_summary = translated_summary
                 st.session_state.processing_info = processing_info
                 st.session_state.vector_store = vector_store
                 st.session_state.chat_history = []
@@ -96,7 +118,27 @@ if generate_btn:
 
 if st.session_state.summary:
 
+    metadata = st.session_state.metadata
+
+    if metadata:
+
+        st.write("## 🎥 Video Details")
+
+        if metadata["thumbnail_url"]:
+            st.image(metadata["thumbnail_url"], width=500)
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.write(f"**Title:** {metadata['title']}")
+            st.write(f"**Channel:** {metadata['author']}")
+
+        with col2:
+            st.write(f"**Published:** {metadata['publish_date']}")
+            st.write(f"**Duration:** {metadata['duration']}")
+
     st.divider()
+    
 
     st.write("## 📌 Video Information")
 
@@ -124,7 +166,7 @@ if st.session_state.summary:
     st.write("## 📝 Video Summary")
 
     with st.expander("View Full Summary", expanded=True):
-        st.markdown(st.session_state.summary)
+        st.markdown(st.session_state.translated_summary)
 
     st.divider()
 
@@ -155,14 +197,13 @@ if st.session_state.summary:
                         st.session_state.vector_store,
                         question
                     )
-
+                    translated_answer = translate_text(answer, language)
                     st.session_state.chat_history.append(
                         {
                             "question": question,
-                            "answer": answer
+                            "answer": translated_answer
                         }
                     )
-
             except Exception as e:
                 st.error(f"Question answering failed: {str(e)}")
 
@@ -177,8 +218,13 @@ if st.session_state.summary:
                 st.markdown(chat["answer"])
     st.divider()
     #-----------PDF GENERATION----------------
-    st.write("## 📄 Export PDF")
 
+st.write("## 📄 Export PDF")
+
+if language != "English":
+    st.warning("PDF export currently supports English only.")
+
+else:
     if st.button("Generate PDF", use_container_width=True):
         pdf_path = generate_pdf(
             video_url=st.session_state.current_url,
