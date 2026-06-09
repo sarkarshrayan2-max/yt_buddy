@@ -1,4 +1,4 @@
-# 🎥 YT Buddy
+#  YT Buddy
 
 AI-Powered YouTube Learning Assistant
 
@@ -6,14 +6,14 @@ YT Buddy is an end-to-end AI application that transforms YouTube videos into int
 
 ---
 
-## 🚀 Features
+##  Features
 
-### 📜 Transcript Extraction
+###  Transcript Extraction
 
 * Extracts transcripts directly from YouTube videos.
 * Handles long-form educational videos and podcasts.
 
-### 🧠 Intelligent Summarization
+###  Intelligent Summarization
 
 * Direct summarization for short videos.
 * Map-Reduce summarization for long videos.
@@ -25,7 +25,7 @@ YT Buddy is an end-to-end AI application that transforms YouTube videos into int
   * Important Concepts
   * Actionable Insights
 
-### ✂️ Smart Chunking
+###  Smart Chunking
 
 * Automatically detects transcript length.
 * Switches between:
@@ -34,7 +34,7 @@ YT Buddy is an end-to-end AI application that transforms YouTube videos into int
   * Chunk-Based Processing
 * Uses overlapping chunks to preserve context.
 
-### 💬 Chat With Video (RAG)
+###  Chat With Video (RAG)
 
 * Ask questions about video content.
 * Uses:
@@ -44,7 +44,7 @@ YT Buddy is an end-to-end AI application that transforms YouTube videos into int
   * Groq LLM
 * Retrieves relevant transcript chunks before generating answers.
 
-### 🌍 Translation Support
+###  Translation Support
 
 Translate summaries and answers into:
 
@@ -54,7 +54,7 @@ Translate summaries and answers into:
 * French
 * Spanish
 
-### 📄 PDF Export
+###  PDF Export
 
 Export:
 
@@ -62,7 +62,7 @@ Export:
 * Key Concepts
 * Chat History
 
-### 🎥 Video Metadata
+###  Video Metadata
 
 Displays:
 
@@ -72,14 +72,14 @@ Displays:
 * Duration
 * Thumbnail
 
-### ☁️ Cloud Deployment
+###  Cloud Deployment
 
 * Streamlit Cloud Deployment
 * GitHub Actions CI/CD Pipeline
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 
 ```text
 YouTube URL
@@ -112,7 +112,7 @@ Answer Generation
 
 ---
 
-## 🧠 RAG Pipeline
+##  RAG Pipeline
 
 ```text
 Transcript
@@ -134,7 +134,7 @@ Answer
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 ### Frontend
 
@@ -170,33 +170,6 @@ Answer
 
 ---
 
-## 📂 Project Structure
-
-```text
-yt_buddy/
-│
-├── app.py
-│
-├── src/
-│   ├── config.py
-│   ├── transcript.py
-│   ├── chunker.py
-│   ├── summarizer.py
-│   ├── rag.py
-│   ├── translator.py
-│   ├── video_metadata.py
-│   ├── pdf_generator.py
-│   └── prompts.py
-│
-├── requirements.txt
-├── .gitignore
-├── README.md
-└── .github/
-    └── workflows/
-        └── main.yml
-```
-
----
 
 ## ⚙️ Installation
 
@@ -235,7 +208,7 @@ pip install -r requirements.txt
 
 ---
 
-## 🔑 Environment Variables
+##  Environment Variables
 
 Create a `.env` file:
 
@@ -245,35 +218,15 @@ GROQ_API_KEY=your_groq_api_key
 
 ---
 
-## ▶️ Run Locally
+##  Run Locally
 
 ```bash
 streamlit run app.py
 ```
 
----
 
-## 📸 Screenshots
 
-### Home Page
-
-Add screenshot here.
-
-### Summary Generation
-
-Add screenshot here.
-
-### Chat With Video
-
-Add screenshot here.
-
-### PDF Export
-
-Add screenshot here.
-
----
-
-## 🎯 Future Enhancements
+##  Future Enhancements
 
 * Playlist Summarization
 * Timestamp-Based Citations
@@ -286,7 +239,7 @@ Add screenshot here.
 
 ---
 
-## 👨‍💻 Author
+##  Author
 
 Shrayan Sarkar
 
